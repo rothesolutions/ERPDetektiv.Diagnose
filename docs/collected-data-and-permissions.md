@@ -36,12 +36,11 @@ Evidence-Werten, Collector-Meldungen und im HTML-Bericht. Verantwortlich ist
 
 ### Grenzen der Pseudonymisierung
 
-- Die Kennungen sind ein ungesalzener SHA-256-Hash über den Originalwert. Sie
-  sind damit **über Diagnosepakete hinweg vergleichbar** – Voraussetzung für
-  spätere Vorher-/Nachher-Vergleiche –, aber **nicht gegen gezieltes
-  Durchprobieren bekannter Namen geschützt**. Wer einen Hostnamen vermutet,
-  kann ihn durch Nachrechnen bestätigen. Für „den Namen nicht beiläufig aus
-  der Hand geben" reicht das; für „nicht rückrechenbar" nicht.
+- Die Kennungen bleiben **über Diagnosepakete hinweg vergleichbar**. Das hilft
+  bei Vorher-/Nachher-Vergleichen. Es ist aber keine vollständige
+  Anonymisierung: Wer einen Hostnamen bereits kennt oder vermutet, kann ihn
+  einer Kennung zuordnen. Diagnosepakete sollten deshalb weiterhin vertraulich
+  behandelt werden.
 - Instanznamen bleiben über die Dienstliste sichtbar: Ein Dienst
   `MSSQL$SAGE100` wird nicht umgeschrieben, weil Dienstnamen zur lesbaren
   Kategorie gehören.
@@ -235,24 +234,21 @@ daraus wird gelesen.
 
 ## Findings
 
-Die ersten Findings bleiben absichtlich konservativ. Nicht laufende Sage-Dienste
-werden nur gemeldet, wenn sie auf automatischen Start gesetzt sind – Dienste mit
-Starttyp `Manual` oder `Disabled` sind planmäßig gestoppt. Datenbanken, die
-nicht online sind, werden von Backup- und Autogrowth-Regeln ausgenommen.
-Zusätzliche SOAP-Services und SData-Endpunkte mit Binding `HttpsNone` sind
-Informationen, keine pauschalen Fehlkonfigurationen.
+Findings weisen auf klar erkennbare technische Zustände hin. Ein nicht laufender
+Sage-Dienst wird zum Beispiel nur gemeldet, wenn er automatisch starten sollte;
+bei `Manual` oder `Disabled` ist der Stopp erwartbar. Datenbanken, die nicht
+online sind, werden nicht mit Backup- oder Autogrowth-Regeln bewertet.
+Zusätzliche SOAP-Services und SData-Endpunkte mit Binding `HttpsNone` erscheinen
+als Information, nicht als pauschales Problem.
 
-## Woher die Schwellenwerte stammen
+## Einordnung von Schwellenwerten
 
-Die Findings zu Zugriffszeit, Page Life Expectancy und wartenden Memory Grants
-sind aus einer Zehnstundenmessung über vier Server hervorgegangen. Ihre
-Grenzwerte stammen aber ausdrücklich **nicht** aus dieser Messung, sondern aus
-etablierter Praxis – unter 10 ms gut und über 20 ms auffällig gilt unabhängig von
-Systemgröße und Last.
+Die Checks zu Zugriffszeit, Page Life Expectancy und wartenden Memory Grants
+orientieren sich an etablierten Betriebsrichtwerten. Sie markieren einen Punkt,
+den man sich ansehen sollte, nicht automatisch die Ursache eines Problems.
 
-Das ist die Bedingung, an der andere Kandidaten gescheitert sind: Regeln zum
-CXPACKET-Anteil, zum Signal-Wait-Anteil und zur bloßen Anwesenheit von
-Blockierungen hätten auf einem als gut eingestellt betrachteten Referenzsystem
-angeschlagen und sind deshalb ausgeschieden. Ein Schwellenwert taugt nur, wenn er
-eine Bezugsgröße außerhalb des gemessenen Systems hat.
+Für Kennzahlen ohne verlässlichen, allgemein nutzbaren Richtwert erzeugt das Tool
+kein Finding. Das gilt etwa für den Anteil einzelner Wait-Typen oder die bloße
+Anwesenheit von Blockierungen: Diese Werte brauchen immer den Kontext des
+jeweiligen Systems.
 
