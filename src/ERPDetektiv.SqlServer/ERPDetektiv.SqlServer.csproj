@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup><ProjectReference Include="..\ERPDetektiv.Contracts\ERPDetektiv.Contracts.csproj" /></ItemGroup>
+  <ItemGroup><PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" /></ItemGroup>
+</Project>

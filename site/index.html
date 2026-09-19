@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ERPDetektiv Diagnose – lokaler technischer Snapshot für Sage 100 und Microsoft SQL Server.">
+  <title>ERPDetektiv Diagnose</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <header>
+      <p class="kicker">Open Source · Apache-2.0</p>
+      <h1>ERPDetektiv Diagnose</h1>
+      <p class="intro">Lokales Diagnosewerkzeug für Sage 100, Microsoft SQL Server und Windows. Es erstellt einen technischen Snapshot mit nachvollziehbaren Findings und einem teilbaren Diagnosepaket.</p>
+      <nav><a href="#start">Start</a><a href="#umfang">Umfang</a><a href="#paket">Diagnosepaket</a><a href="#mitmachen">Mitmachen</a></nav>
+    </header>
+
+    <section id="start">
+      <h2>Wofür?</h2>
+      <p>Für Situationen wie „Sage ist langsam“, „die Auftragserfassung hängt“ oder „was hat sich nach dem Update geändert?“. Das Werkzeug ersetzt keine Analyse. Es sammelt die technischen Grundlagen, die dafür sonst einzeln zusammengetragen werden müssten.</p>
+      <h2>Schnellstart</h2>
+      <pre><code>$env:ERPDETEKTIV_SQL_CONNECTION = "Server=sqlsrv01;Database=master;Integrated Security=True;Encrypt=True"
+dotnet run --project .\src\ERPDetektiv.Cli -- --output .\diagnose.zip --pseudonymize</code></pre>
+      <p>Alternativ: Solution in Visual Studio öffnen und <code>ERPDetektiv.Gui</code> starten.</p>
+    </section>
+
+    <section id="umfang">
+      <h2>Was wird geprüft?</h2>
+      <table>
+        <thead><tr><th>Bereich</th><th>Beispiele</th></tr></thead>
+        <tbody>
+          <tr><td>Windows</td><td>Betriebssystem, Speicher, Laufwerke, Energieplan, relevante SQL- und Sage-Dienste</td></tr>
+          <tr><td>SQL Server</td><td>Version, Konfiguration, Datenbanken, Backup-Stand, Query Store, Speicher, I/O-Latenz, PLE und Memory Grants</td></tr>
+          <tr><td>Sage 100</td><td>Installation, Komponenten, Application Server, SData- und SOAP-Endpunkte</td></tr>
+        </tbody>
+      </table>
+      <p>Fehlende Rechte oder nicht lesbare Bereiche werden im Erfassungsstatus angezeigt. Sie werden nicht als unauffälliges Ergebnis behandelt.</p>
+      <h2>Was nicht?</h2>
+      <ul><li>Kein Monitoring und keine dauerhafte Überwachung.</li><li>Keine Telemetrie und keine automatische Datenübertragung.</li><li>Keine Änderung an Sage, SQL Server oder Windows.</li></ul>
+    </section>
+
+    <section id="paket">
+      <h2>Diagnosepaket</h2>
+      <p>Der Export ist eine ZIP-Datei mit JSON-Snapshots, Findings, Erfassungsstatus, Prüfsummen und HTML-Zusammenfassung. Host- und Servernamen können konsistent pseudonymisiert werden. Zugangsdaten und Connection Strings werden nicht exportiert.</p>
+      <p>Vor dem Export prüft <code>--preflight</code> Verbindung, Berechtigungen, Sage-Erkennung und Zielpfad.</p>
+    </section>
+
+    <section id="mitmachen">
+      <h2>Projektstatus</h2>
+      <p><strong>v0.2.0</strong> ist der erste öffentliche Pre-release. Das Werkzeug ist für reale technische Diagnoseeinsätze gedacht; Rückmeldungen zu fehlenden Daten, Fehlalarmen und unterstützten Umgebungen sind willkommen.</p>
+      <p>Für Fehler und Verbesserungen: GitHub Issue mit Tool-Version, Windows-/SQL-/Sage-Version, genauer Fehlermeldung und – falls möglich – pseudonymisiertem Diagnosepaket.</p>
+    </section>
+  </main>
+  <footer>ERPDetektiv Diagnose · Local first · Apache License 2.0</footer>
+</body>
+</html>

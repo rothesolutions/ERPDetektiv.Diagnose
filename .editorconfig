@@ -1,0 +1,29 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.{json,yml,yaml,xml,csproj,props,slnx}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.cs]
+max_line_length = 120
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_style_var_when_type_is_apparent = true:suggestion
+dotnet_sort_system_directives_first = true
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
+
+# Kultur explizit angeben. Ein kulturabhaengiger Vergleich oder eine kulturabhaengige
+# Formatierung hat im Diagnoseexport nichts verloren - der Export wird auf einem anderen
+# System ausgewertet als er entsteht.
+dotnet_diagnostic.CA1304.severity = warning
+dotnet_diagnostic.CA1305.severity = warning
+dotnet_diagnostic.CA1310.severity = warning

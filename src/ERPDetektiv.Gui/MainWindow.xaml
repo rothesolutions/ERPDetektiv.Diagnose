@@ -1,0 +1,74 @@
+<Window x:Class="ERPDetektiv.Gui.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="ERPDetektiv Diagnose" Height="780" Width="980" MinHeight="620" MinWidth="820">
+  <Grid Margin="20">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <TextBlock FontSize="24" FontWeight="SemiBold" Text="ERPDetektiv Diagnose" />
+    <TextBlock Grid.Row="1" Margin="0,6,0,14" TextWrapping="Wrap" Foreground="DimGray" Text="Die Diagnose läuft lokal. Zugangsdaten werden nur während der Verbindung verwendet und niemals gespeichert oder exportiert." />
+    <GroupBox Grid.Row="2" Header="SQL Server" Padding="12">
+      <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock VerticalAlignment="Top" Text="Server:"/>
+        <TextBox x:Name="ServerName" Grid.Column="1" Margin="8,0,16,8" ToolTip="Beispiel: SQLSRV01\SAGE100 oder tcp:sqlsrv01,1433" TextChanged="ConnectionInput_Changed"/>
+        <TextBlock Grid.Row="1" VerticalAlignment="Top" Text="Anmeldung:"/>
+        <Button x:Name="TestButton" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Verbindung prüfen" Click="TestButton_Click"/>
+        <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Text="Datenbank:"/>
+        <ComboBox Grid.Row="1"  x:Name="DatabaseName" Grid.Column="3" Margin="8,0, 0,8" IsEnabled="False" SelectionChanged="Database_SelectionChanged"/>
+
+        <ComboBox x:Name="Authentication" Grid.Row="1" Grid.Column="1" Margin="8,0,16,8" SelectedIndex="0" SelectionChanged="Authentication_SelectionChanged">
+            <ComboBoxItem Content="Windows-Authentifizierung"/>
+            <ComboBoxItem Content="SQL-Authentifizierung"/>
+        </ComboBox>
+        <TextBlock x:Name="UserLabel" Grid.Row="2" VerticalAlignment="Center" Text="Benutzer:" Visibility="Collapsed"/><TextBox x:Name="UserName" Grid.Row="2" Grid.Column="1" Margin="8,0,16,8" Visibility="Collapsed" TextChanged="ConnectionInput_Changed"/>
+        <TextBlock x:Name="PasswordLabel" Grid.Row="3" VerticalAlignment="Center" Text="Kennwort:" Visibility="Collapsed"/><PasswordBox x:Name="Password" Grid.Row="3" Grid.Column="1" Margin="8,0,16,0" Visibility="Collapsed" PasswordChanged="ConnectionInput_Changed"/>
+        <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center"><CheckBox x:Name="Encrypt" Content="Verschlüsseln" IsChecked="True" Checked="ConnectionOption_Changed" Unchecked="ConnectionOption_Changed"/><CheckBox x:Name="TrustCertificate" Margin="18,0,0,0" Content="Serverzertifikat vertrauen" IsChecked="False" ToolTip="Deaktiviert die Prüfung des Serverzertifikats. Nur setzen, wenn der Server ein selbstsigniertes Zertifikat verwendet und die Verbindung im vertrauenswürdigen Netz liegt." Checked="ConnectionOption_Changed" Unchecked="ConnectionOption_Changed"/></StackPanel>
+      </Grid>
+    </GroupBox>
+    <Grid Grid.Row="3" Margin="0,16,0,12"><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+      <TabControl>
+        <TabItem Header="Ergebnis">
+          <ListView x:Name="Findings" BorderThickness="0"><ListView.View><GridView><GridViewColumn Header="Bewertung" Width="85" DisplayMemberBinding="{Binding Severity}"/><GridViewColumn Header="Titel" Width="230" DisplayMemberBinding="{Binding Name}"/><GridViewColumn Header="Beschreibung" Width="560" DisplayMemberBinding="{Binding Description}"/></GridView></ListView.View></ListView>
+        </TabItem>
+        <TabItem Header="Fallnotizen (optional)">
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="12">
+              <TextBlock TextWrapping="Wrap" Foreground="DimGray" Margin="0,0,0,10" Text="Freiwillige Angaben. Sie werden als notes.json und im HTML-Bericht beigelegt und sind für eine spätere Analyse oft der entscheidende Kontext. Keine Kundennamen oder personenbezogenen Daten eintragen." />
+              <TextBlock Text="Beobachtetes Symptom" FontWeight="SemiBold" Margin="0,0,0,3"/>
+              <TextBox x:Name="NoteSymptom" Height="52" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" ToolTip="Beispiel: Auftragserfassung hängt beim Speichern für 10 bis 20 Sekunden"/>
+              <TextBlock Text="Seit wann" FontWeight="SemiBold" Margin="0,10,0,3"/>
+              <TextBox x:Name="NoteObservedSince" ToolTip="Beispiel: seit dem Update am Montag; täglich zwischen 8 und 10 Uhr"/>
+              <TextBlock Text="Betroffener Bereich" FontWeight="SemiBold" Margin="0,10,0,3"/>
+              <TextBox x:Name="NoteAffectedArea" ToolTip="Beispiel: nur Auftragserfassung; alle Arbeitsplätze"/>
+              <TextBlock Text="Letzte Änderungen" FontWeight="SemiBold" Margin="0,10,0,3"/>
+              <TextBox x:Name="NoteRecentChanges" Height="52" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" ToolTip="Beispiel: Sage-Update, neuer Virenscanner, Serverwechsel"/>
+              <TextBlock Text="Weitere Hinweise" FontWeight="SemiBold" Margin="0,10,0,3"/>
+              <TextBox x:Name="NoteAdditional" Height="52" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+            </StackPanel>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
+      <StackPanel Grid.Row="1">
+        <ProgressBar x:Name="Progress" Height="4" Margin="0,12,0,0" IsIndeterminate="True" Visibility="Collapsed"/>
+        <Border x:Name="StatusPanel" Margin="0,8,0,0" Padding="8,6" CornerRadius="3">
+          <TextBlock x:Name="Result" TextWrapping="Wrap" Foreground="DimGray" />
+        </Border>
+      </StackPanel>
+    </Grid>
+    <DockPanel Grid.Row="4">
+      <Button x:Name="RunButton" DockPanel.Dock="Right" HorizontalAlignment="Right" Content="Diagnose &amp; Export" Padding="18,8" Margin="12,0,0,0" IsEnabled="False" Click="RunButton_Click"/>
+      <Button x:Name="CancelButton" DockPanel.Dock="Right" HorizontalAlignment="Right" Content="Abbrechen" Padding="18,8" Margin="12,0,0,0" IsEnabled="False" Click="CancelButton_Click"/>
+      <Button x:Name="PreflightButton" DockPanel.Dock="Right" HorizontalAlignment="Right" Content="Vorabcheck" Padding="18,8" Margin="32,0,0,0" ToolTip="Prüft Erreichbarkeit, Berechtigungen, Sage-Erkennung und Exportpfad, ohne ein Paket zu schreiben." Click="PreflightButton_Click"/>
+      <CheckBox x:Name="Pseudonymize" VerticalAlignment="Center" Content="Host- und Servernamen im Export pseudonymisieren" IsChecked="True"/>
+    </DockPanel>
+  </Grid>
+</Window>

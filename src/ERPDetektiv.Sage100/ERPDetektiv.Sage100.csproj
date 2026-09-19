@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\ERPDetektiv.Contracts\ERPDetektiv.Contracts.csproj" />
+    <ProjectReference Include="..\ERPDetektiv.Platform\ERPDetektiv.Platform.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Einzige Quelle der Sage-Abfrage; tools/Build-Recorder.ps1 bettet dieselbe
+         Datei in das Messwerkzeug ein. -->
+    <EmbeddedResource Include="Scripts\Get-SageApplicationServerInfo.ps1" />
+  </ItemGroup>
+</Project>

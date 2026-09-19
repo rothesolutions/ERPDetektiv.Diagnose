@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\ERPDetektiv.Contracts\ERPDetektiv.Contracts.csproj" />
+    <ProjectReference Include="..\ERPDetektiv.Platform\ERPDetektiv.Platform.csproj" />
+  </ItemGroup>
+</Project>

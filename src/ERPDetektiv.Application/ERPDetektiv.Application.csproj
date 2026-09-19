@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\ERPDetektiv.Contracts\ERPDetektiv.Contracts.csproj" />
+    <ProjectReference Include="..\ERPDetektiv.Core\ERPDetektiv.Core.csproj" />
+    <ProjectReference Include="..\ERPDetektiv.Windows\ERPDetektiv.Windows.csproj" />
+    <ProjectReference Include="..\ERPDetektiv.Sage100\ERPDetektiv.Sage100.csproj" />
+    <ProjectReference Include="..\ERPDetektiv.Checks\ERPDetektiv.Checks.csproj" />
+    <ProjectReference Include="..\ERPDetektiv.SqlServer\ERPDetektiv.SqlServer.csproj" />
+  </ItemGroup>
+</Project>

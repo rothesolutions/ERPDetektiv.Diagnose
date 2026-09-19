@@ -1,0 +1,136 @@
+name: Build
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '10.0.x'
+
+jobs:
+  build:
+    # Windows-Runner, weil GUI, Collector und Recorder windowsspezifisch sind.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ERPDetektiv.Diagnose.slnx
+
+      - name: Build
+        run: dotnet build ERPDetektiv.Diagnose.slnx --configuration Release --no-restore -warnaserror
+
+      - name: Test
+        run: dotnet test tests/ERPDetektiv.Tests/ERPDetektiv.Tests.csproj --configuration Release --no-build --filter "Category!=Integration" --collect:"XPlat Code Coverage"
+
+  sql-integration:
+    runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          MSSQL_PID: Developer
+          MSSQL_SA_PASSWORD: ErpDetektiv!Sql2026
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'ErpDetektiv!Sql2026' -Q 'SELECT 1'"
+          --health-interval 10s --health-timeout 5s --health-retries 12 --health-start-period 30s
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: SQL-Integrationstest
+        env:
+          ERPDETEKTIV_TEST_SQL_CONNECTION: Server=localhost,1433;User ID=sa;Password=ErpDetektiv!Sql2026;Encrypt=True;TrustServerCertificate=True
+          ERPDETEKTIV_REQUIRE_INTEGRATION: "1"
+        run: dotnet test tests/ERPDetektiv.Tests/ERPDetektiv.Tests.csproj --filter "Category=Integration"
+
+  package:
+    needs: [build, sql-integration]
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Standarddownload: self-contained, damit auf Sage-Servern keine
+      # .NET-Laufzeit vorausgesetzt werden muss. Die framework-abhaengige
+      # Variante ist ausdruecklich die Ausnahme.
+      - name: Standardpaket (self-contained win-x64)
+        run: |
+          dotnet publish src/ERPDetektiv.Gui/ERPDetektiv.Gui.csproj -c Release -r win-x64 --self-contained true -o pkg/standard/gui
+          dotnet publish src/ERPDetektiv.Cli/ERPDetektiv.Cli.csproj -c Release -r win-x64 --self-contained true -o pkg/standard/cli
+
+      - name: Optionales Paket (framework-dependent)
+        run: |
+          dotnet publish src/ERPDetektiv.Gui/ERPDetektiv.Gui.csproj -c Release -r win-x64 --self-contained false -o pkg/framework-dependent/gui
+          dotnet publish src/ERPDetektiv.Cli/ERPDetektiv.Cli.csproj -c Release -r win-x64 --self-contained false -o pkg/framework-dependent/cli
+
+      - name: Selbstpruefung der Pakete
+        shell: pwsh
+        run: |
+          # Ein versehentlich framework-abhaengiges Standardpaket startet auf einem
+          # Server ohne .NET nicht - und faellt sonst erst beim Kunden auf.
+          foreach ($app in 'gui', 'cli') {
+            if (-not (Test-Path "pkg/standard/$app/coreclr.dll")) { throw "Standardpaket $app ist nicht self-contained." }
+            if (Test-Path "pkg/framework-dependent/$app/coreclr.dll") { throw "Optionales Paket $app sollte framework-abhaengig sein." }
+            Copy-Item docs/windows-ausfuehrung-blockiert.md "pkg/standard/$app/"
+            Copy-Item docs/windows-ausfuehrung-blockiert.md "pkg/framework-dependent/$app/"
+            Copy-Item LICENSE, NOTICE "pkg/standard/$app/"
+            Copy-Item LICENSE, NOTICE "pkg/framework-dependent/$app/"
+          }
+
+      # Platzhalter fuer die Code-Signierung. Seit Juni 2023 muss der private
+      # Schluessel auf zertifizierter Hardware liegen; in Frage kommen Azure
+      # Trusted Signing oder ein Cloud-Signierdienst einer CA. Sobald das
+      # Zertifikat vorliegt, wird hier signiert - vor dem Packen und mit
+      # Zeitstempelserver, sonst laufen die Signaturen mit dem Zertifikat ab.
+      # Signierung ersetzt keine ASR-Ausnahme, siehe
+      # docs/windows-ausfuehrung-blockiert.md.
+      - name: Signieren
+        if: false
+        run: echo 'Noch kein Zertifikat hinterlegt.'
+
+      - name: Pakete schnueren und Pruefsummen bilden
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path release -Force | Out-Null
+          Compress-Archive pkg/standard/*            release/ERPDetektiv-win-x64.zip
+          Compress-Archive pkg/framework-dependent/* release/ERPDetektiv-framework-dependent.zip
+          # Die Pruefsummen begleiten jedes Paket: Ohne sie kann ein Administrator
+          # eine Sicherheitsausnahme nicht verantworten.
+          Get-ChildItem release -File | Where-Object Name -ne 'SHA256SUMS.txt' | ForEach-Object {
+            '{0}  {1}' -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name
+          } | Tee-Object -FilePath release/SHA256SUMS.txt
+          Get-Content release/SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: erpdetektiv-pakete
+          path: release/
+
+      - name: Release veroeffentlichen
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view $env:GITHUB_REF_NAME 2>$null
+          if ($LASTEXITCODE -ne 0) { gh release create $env:GITHUB_REF_NAME --generate-notes }
+          gh release upload $env:GITHUB_REF_NAME (Get-ChildItem release | ForEach-Object FullName) --clobber
