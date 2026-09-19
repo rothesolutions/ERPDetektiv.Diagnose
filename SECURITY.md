@@ -2,7 +2,7 @@
 
 ## Sicherheitslücken melden
 
-Bitte melde Sicherheitslücken **nicht** über ein öffentliches GitHub-Issue.
+Bitte veröffentliche Sicherheitslücken nicht als GitHub-Issue.
 
 Schicke stattdessen eine E-Mail an **security@erpdetektiv.de**. Hilfreich sind:
 
@@ -12,9 +12,9 @@ Schicke stattdessen eine E-Mail an **security@erpdetektiv.de**. Hilfreich sind:
 - falls vorhanden ein Diagnosepaket, aus dem du zuvor alle realen Host-,
   Server- und Kundenbezeichner entfernt hast.
 
-Wir bestätigen den Eingang innerhalb von fünf Werktagen und melden uns
-danach mit einer Einschätzung. Bitte gib uns Gelegenheit, eine korrigierte
-Version bereitzustellen, bevor du Details veröffentlichst.
+Wir bestätigen den Eingang innerhalb von fünf Werktagen und melden uns mit
+einer ersten Einschätzung. Gib uns bitte die Chance, eine Korrektur
+bereitzustellen, bevor Details öffentlich werden.
 
 ## Was wir als Sicherheitslücke betrachten
 

@@ -1,13 +1,13 @@
 # Lokaler SQL Server für Entwicklung und Tests
 
-Die Compose-Datei in `infra/docker-compose.dev.yml` startet eine isolierte
-SQL-Server-2025-Developer-Instanz ausschließlich für ERPDetektiv. Der Host-Port
-ist bewusst `127.0.0.1:1533`; er kollidiert nicht mit einer möglichen lokalen
-SQL-Server-Instanz auf 1433 und ist nicht aus dem Netzwerk erreichbar.
+Die Compose-Datei in `infra/docker-compose.dev.yml` startet eine eigene
+SQL-Server-2025-Developer-Instanz für ERPDetektiv. Sie ist nur über
+`127.0.0.1:1533` erreichbar: Das kollidiert nicht mit einem lokalen SQL Server
+auf Port 1433 und bleibt aus dem Netzwerk heraus unsichtbar.
 
 ## Starten
 
-Empfohlen ist eine nicht versionierte `.env`-Datei im Projektstamm:
+Am einfachsten ist eine lokale `.env`-Datei im Projektstamm:
 
 ```powershell
 Copy-Item .\.env.example .\.env
@@ -15,10 +15,9 @@ Copy-Item .\.env.example .\.env
 docker compose --env-file .\.env -f .\infra\docker-compose.dev.yml up -d
 ```
 
-`.env` ist in `.gitignore` eingetragen und wird nicht versioniert. Der
-Container verwendet ein eigenes Docker-Volume namens `erpdetektiv_sql_data`;
-`docker compose down` entfernt den Container, behält aber die
-Entwicklungsdaten.
+`.env` steht in `.gitignore` und wird nicht eingecheckt. Der Container nutzt
+das eigene Docker-Volume `erpdetektiv_sql_data`. `docker compose down` beendet
+und entfernt den Container, lässt die Entwicklungsdaten aber liegen.
 
 Alternativ kann `MSSQL_SA_PASSWORD` als kurzlebige PowerShell-
 Umgebungsvariable gesetzt werden. Die Compose-Datei benötigt in beiden Fällen
@@ -35,16 +34,16 @@ Im aktuellen Entwicklungsstand ist das bereitgestellte Backup bereits als
 `tcp:127.0.0.1,1533`; das Kennwort liegt ausschließlich in der ignorierten Datei
 `.env` im Projektstamm.
 
-Den Collector anschließend nur für die Laufzeit konfigurieren:
+Für einen Lauf den Collector anschließend so konfigurieren:
 
 ```powershell
 $env:ERPDETEKTIV_SQL_CONNECTION = "Server=localhost,1533;Database=OLDemoReweAbfD;User ID=sa;Password=$env:MSSQL_SA_PASSWORD;Encrypt=True;TrustServerCertificate=True"
 dotnet run --project .\src\ERPDetektiv.Cli -- --sql-server localhost,1533 --database OLDemoReweAbfD --output .\diagnose.zip --pseudonymize
 ```
 
-Der Collector wurde gegen diese Datenbank erfolgreich integriert getestet. Für
-eine robuste Docker-/SSMS-Verbindung stets `tcp:127.0.0.1,1533` verwenden;
-damit wird IPv4/TCP erzwungen.
+Der Collector ist gegen diese Datenbank integriert getestet. Für Docker oder
+SSMS am besten immer `tcp:127.0.0.1,1533` verwenden; damit ist IPv4/TCP
+eindeutig gewählt.
 
 ## Beenden und bereinigen
 
@@ -53,5 +52,5 @@ docker compose --env-file .\.env -f .\infra\docker-compose.dev.yml down
 docker volume rm erpdetektiv_sql_data
 ```
 
-Der zweite Befehl löscht die persistenten Entwicklungsdaten und ist deshalb
-absichtlich getrennt.
+Der zweite Befehl löscht die persistenten Entwicklungsdaten. Er ist deshalb
+separat aufgeführt.

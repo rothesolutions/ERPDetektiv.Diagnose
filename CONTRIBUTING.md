@@ -1,27 +1,26 @@
 # Mitwirken
 
-Danke für dein Interesse an ERPDetektiv Diagnose. Das Werkzeug entsteht aus
-echten Sage-100-Analysen; Beiträge aus der Praxis sind ausdrücklich willkommen.
+Danke für dein Interesse an ERPDetektiv Diagnose. Das Werkzeug wächst an echten
+Sage-100-Fällen. Wenn dir bei einer Analyse etwas fehlt oder du eine
+Verbesserung beitragen möchtest, freuen wir uns darauf.
 
 ## Leitgedanken
 
-1. **Fakten sammeln, nicht interpretieren.** Collector liefern Daten, Checks
-   bewerten sie. Ein Collector erzeugt keine Findings, ein Check greift nicht
-   auf das System zu.
-2. **Nur lesen.** Das Werkzeug verändert Sage 100, SQL Server und Windows
-   nicht – auch nicht "nur kurz zum Testen".
-3. **Local first.** Keine Netzwerkübertragung, keine Telemetrie. Der Export
-   erfolgt bewusst durch die Anwenderin oder den Anwender.
-4. **Fehlende Daten sind ein Status, kein Absturz.** Fehlt eine Berechtigung
-   oder eine Komponente, wird das als Collector- beziehungsweise
-   Feature-Status dokumentiert; der Rest der Diagnose läuft weiter.
-5. **Keine unbegründete Warnung.** Ein Check, der bei unvollständigen Daten
-   warnt, schadet mehr als er nützt.
+1. **Fakten vor Deutung.** Collector sammeln Daten, Checks bewerten sie. Ein
+   Collector erzeugt keine Findings, ein Check greift nicht selbst aufs System
+   zu.
+2. **Nur lesen.** Sage 100, SQL Server und Windows bleiben unverändert.
+3. **Lokal arbeiten.** Keine Telemetrie, kein automatischer Versand. Den Export
+   startet immer die Person am Rechner.
+4. **Lücken sichtbar machen.** Fehlt eine Berechtigung oder Komponente, wird
+   das als Status festgehalten; der übrige Lauf geht weiter.
+5. **Warnungen müssen belastbar sein.** Ein unzuverlässiger Check hilft nicht.
 
 ## Datenschutz bei neuen Collectorn und Checks
 
-Vor jedem neuen Datenpunkt gilt die Frage: *Kann dieser Wert Geschäftsdaten,
-Zugangsdaten oder personenbezogene Daten enthalten?* Im Zweifel nicht erfassen.
+Vor jedem neuen Datenpunkt bitte fragen: *Kann dieser Wert Geschäfts-,
+Zugangs- oder personenbezogene Daten enthalten?* Wenn Zweifel bleiben, gehört
+er nicht in die Erfassung.
 
 Welche Bezeichner pseudonymisiert werden und welche bewusst lesbar bleiben,
 ist in [docs/collected-data-and-permissions.md](docs/collected-data-and-permissions.md)
@@ -53,7 +52,7 @@ SQL-Integrationstests.
 
 ## Pull Requests
 
-Beschreibe, welches reale Problem der Beitrag sichtbar macht. Ein Satz aus der
-Praxis ("das musste ich bei der letzten Analyse manuell heraussuchen") ist
-wertvoller als eine Featureliste. Mit dem Beitrag stimmst du zu, dass er unter
-der Apache License 2.0 veröffentlicht wird.
+Beschreibe kurz, welches reale Problem dein Beitrag sichtbar macht. Ein Satz
+aus der Praxis ("Das musste ich bei der letzten Analyse manuell heraussuchen")
+hilft mehr als eine lange Featureliste. Mit deinem Beitrag stimmst du der
+Veröffentlichung unter der Apache License 2.0 zu.

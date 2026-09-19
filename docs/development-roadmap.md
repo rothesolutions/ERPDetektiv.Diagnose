@@ -2,11 +2,9 @@
 
 ## Versionsentscheidung
 
-Die erste öffentliche Veröffentlichung lautet **v0.2.0** und erscheint als
-GitHub-Pre-release. Die Community Edition ist funktional nützlich, aber ihre
-Erfassungsgrenzen, das Paketformat und die Checks sollen sich noch an echten
-Fällen bewähren. Eine 0.x-Version macht diese Lernphase transparent, ohne den
-Nutzen des Werkzeugs kleinzureden.
+Die erste öffentliche Veröffentlichung ist **v0.2.0** als GitHub-Pre-release.
+Das Werkzeug ist nutzbar; Umfang, Paketformat und Checks sollen sich jetzt an
+echten Fällen bewähren. Die 0.x-Version macht diese Lernphase transparent.
 
 **v1.0.0** folgt erst, wenn diese Kriterien erfüllt sind:
 
@@ -21,7 +19,8 @@ Nutzen des Werkzeugs kleinzureden.
 
 ## Phase 0 – Öffentliche Nutzung starten
 
-**Ziel:** v0.2.0 als sinnvolles, transparentes Community-Werkzeug veröffentlichen.
+**Ziel:** v0.2.0 als nützliches, nachvollziehbares Community-Werkzeug
+bereitstellen.
 
 - Öffentliche GitHub-Pre-release mit Prüfsummen, Release Notes und
   Ausführungsanleitung.
@@ -67,7 +66,7 @@ Reportvorlagen und wiederholbare Capture-Vorlagen umfassen.
 ## Bewusste Leitplanken
 
 - Community sammelt Fakten und zeigt objektive, nachvollziehbare Findings.
-- Pro verkauft keine künstlichen Beschränkungen, sondern Zeitersparnis,
-  Einordnung und wiederholbare Expertenarbeit.
-- Kein SaaS, Dauer-Monitoring, Plugin-System oder Mandantenverwaltung ohne
-  nachgewiesenen Bedarf aus realen Einsätzen.
+- Ein späteres Pro-Angebot soll Zeit für Einordnung und wiederholbare
+  Expertenarbeit sparen, nicht Funktionen künstlich zurückhalten.
+- SaaS, Dauer-Monitoring, Plugin-System und Mandantenverwaltung kommen nur bei
+  nachgewiesenem Bedarf aus echten Einsätzen infrage.

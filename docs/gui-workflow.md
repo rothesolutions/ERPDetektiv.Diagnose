@@ -2,8 +2,8 @@
 
 ## Zweck
 
-Die WPF-Anwendung führt einen lokalen, einmaligen Diagnoseexport aus. Sie
-speichert weder Zugangsdaten noch baut sie eine Dauerverbindung auf.
+Die WPF-Anwendung erstellt einen lokalen Diagnoseexport. Zugangsdaten werden
+nicht gespeichert, und es bleibt keine Verbindung geöffnet.
 
 ## Ablauf
 
@@ -15,12 +15,11 @@ speichert weder Zugangsdaten noch baut sie eine Dauerverbindung auf.
 2. **Verbindung prüfen** auswählen. Der Test verbindet sich mit `master` und
    liest ausschließlich Servermetadaten sowie die Liste der erreichbaren
    Datenbanken. Er führt keine Query-Store- oder Log-Space-Abfragen aus.
-3. Nach Erfolg die Datenbank im nun freigeschalteten Dropdown wählen. Die
-   Auswahl ist Pflicht und bewusst nicht vorbelegt: Der erste Eintrag der Liste
-   wäre eine beliebige Datenbank, und eine Diagnose der falschen fällt später
-   kaum auf. **Diagnose & Export** bleibt bis zur Wahl gesperrt. Ausgenommen ist
-   eine Instanz ohne Benutzerdatenbanken – sie bleibt diagnostizierbar, nur ohne
-   datenbankspezifische Details.
+3. Nach einem erfolgreichen Test die Datenbank im nun freigeschalteten Dropdown
+   wählen. Die Auswahl startet leer, damit nicht versehentlich die falsche
+   Datenbank diagnostiziert wird. **Diagnose & Export** wird danach verfügbar.
+   Eine Instanz ohne Benutzerdatenbanken lässt sich weiterhin erfassen, dann
+   einfach ohne datenbankspezifische Details.
 
    Eine Änderung am Server verwirft die Liste samt Auswahl. Sonst könnte eine
    Wahl aus der vorherigen Verbindung die Pflichtwahl erfüllen.
@@ -28,12 +27,10 @@ speichert weder Zugangsdaten noch baut sie eine Dauerverbindung auf.
    Erst dann erfasst das Tool die datenbankspezifischen Fakten der gewählten
    Datenbank, etwa Query Store und Log-Space.
 
- Vor Schritt 4 lohnt sich **Vorabcheck**: Er prüft in wenigen Sekunden
- Exportpfad, Windows-Inventur, SQL-Erreichbarkeit samt Mindestberechtigungen und
- Sage-Erkennung, ohne ein Paket zu schreiben. Das Ergebnis erscheint in der
- Ergebnisliste. Auf einem fremden Kundensystem ist damit sofort klar, welche
- Teile des Pakets vollständig werden - statt es hinterher am Erfassungsstatus
- abzulesen.
+Vor Schritt 4 lohnt sich **Vorabcheck**. Er prüft Exportpfad,
+Windows-Inventur, SQL-Erreichbarkeit, Mindestberechtigungen und Sage-Erkennung,
+ohne ein Paket zu schreiben. So ist vor dem Lauf sichtbar, welche Teile der
+Diagnose vollständig werden.
 
 Änderungen an Server, Anmeldeart, Benutzer, Kennwort oder TLS-Optionen machen
 den vorherigen Verbindungstest ungültig. Eine erneute Prüfung ist dann nötig,
@@ -65,11 +62,10 @@ beobachtetes Symptom, seit wann, betroffener Bereich, letzte Änderungen und
 weitere Hinweise. Sie landen als `notes.json` im Paket und als erster Abschnitt
 im HTML-Bericht – vor den Messwerten, weil sie sagen, wonach zu suchen ist.
 
-Die Angaben sind optional; ohne Eintrag entsteht keine `notes.json`. Sie sind
-ausdrücklich Beobachtungen, keine gemessenen Fakten, und im Bericht auch so
+Die Angaben sind optional; ohne Eintrag gibt es keine `notes.json`. Sie gelten
+als Beobachtungen, nicht als Messwerte, und sind im Bericht entsprechend
 gekennzeichnet.
 
 Der Text durchläuft dieselbe Secret-Filterung und Pseudonymisierung wie der
-übrige Export: Wer den Servernamen in das Symptomfeld schreibt, findet dort
-dieselbe Kennung wie im restlichen Paket. Das ersetzt keine Sorgfalt beim
-Formulieren – Kunden- oder Personennamen gehören nicht hinein.
+übrige Export. Ein Servername im Symptomfeld erhält also dieselbe Kennung wie
+im Rest des Pakets. Kunden- oder Personennamen bitte trotzdem nicht eintragen.

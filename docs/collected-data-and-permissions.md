@@ -1,9 +1,10 @@
 # Erfasste Daten und Berechtigungen
 
-## Pseudonymisierung: was geschützt wird und was bewusst lesbar bleibt
+## Pseudonymisierung: was geschützt wird und was lesbar bleibt
 
-Diese Festlegung ist eine Produktentscheidung, keine technische Nebensache. Sie
-gilt für alle Collector und Checks; neue Datenpunkte werden hier eingeordnet.
+Hier steht klar, welche Namen die Pseudonymisierung schützt und welche für eine
+brauchbare technische Einordnung lesbar bleiben. Die Regel gilt für alle
+Collector und Checks; neue Datenpunkte werden hier ergänzt.
 
 **Geschützt** (werden bei `--pseudonymize` beziehungsweise aktivierter
 Pseudonymisierung in der Oberfläche durch stabile Kennungen ersetzt):
@@ -17,19 +18,17 @@ Pseudonymisierung in der Oberfläche durch stabile Kennungen ersetzt):
   `ServerName` einer Datenquelle wird wie ein SQL-Server behandelt, also
   einschließlich Instanzanteil
 
-**Bewusst lesbar** (werden nicht ersetzt):
+**Lesbar** (werden nicht ersetzt):
 
 - Datenbanknamen
 - Windows-Dienstnamen
 - Sage-Komponenten- und Installationsverzeichnisse
 - Laufwerksbuchstaben und Dateinamen
 
-Der Grund für die zweite Liste: Aus diesen Namen lässt sich das technische
-Umfeld ableiten, und genau das ist für eine Diagnose wertvoll. Eine Datenbank
-`DWData` weist beispielsweise auf ein DocuWare-Umfeld hin – eine Information,
-die eine Analyse maßgeblich beeinflussen kann, ohne dass jemand in die Daten
-selbst sehen muss. Eine Pseudonymisierung, die auch diese Namen erfasst, würde
-das Diagnosepaket entwerten.
+Diese Namen helfen bei der technischen Einordnung. Eine Datenbank `DWData` kann
+zum Beispiel auf ein DocuWare-Umfeld hinweisen, ohne dass dabei Daten aus der
+Datenbank erfasst werden. Würden auch diese Namen ersetzt, verlöre das Paket
+wichtigen Diagnosekontext.
 
 Die Ersetzung greift im **gesamten** Paket, also auch in Finding-Freitexten,
 Evidence-Werten, Collector-Meldungen und im HTML-Bericht. Verantwortlich ist
@@ -52,23 +51,22 @@ Evidence-Werten, Collector-Meldungen und im HTML-Bericht. Verantwortlich ist
 
 ## Fallnotizen
 
-Die Fallnotizen sind freiwillige Angaben der Anwenderin oder des Anwenders und
-bewusst vom automatischen Collector getrennt: Symptom, Zeitpunkt, betroffener
-Bereich, letzte Änderungen, weitere Hinweise. Sie entstehen nur durch Eingabe;
+Fallnotizen sind freiwillige Angaben: Symptom, Zeitpunkt, betroffener Bereich,
+letzte Änderungen und weitere Hinweise. Sie werden nur durch Eingabe erzeugt;
 ohne Eintrag enthält das Paket keine `notes.json`.
 
-Der Text ist frei formuliert und durchläuft dieselbe Secret-Filterung und
-Pseudonymisierung wie der übrige Export. Das ersetzt keine Sorgfalt: Wer
-Kundennamen oder personenbezogene Daten einträgt, exportiert sie auch. Der
-HTML-Bericht kennzeichnet die Angaben als Beobachtungen, nicht als Messwerte.
+Der Text durchläuft dieselbe Secret-Filterung und Pseudonymisierung wie der
+übrige Export. Kundennamen oder personenbezogene Daten bitte dennoch nicht
+eintragen. Der HTML-Bericht kennzeichnet Fallnotizen als Beobachtungen, nicht
+als Messwerte.
 
 ## Vorabcheck
 
-Der Vorabcheck führt keine Erfassung durch und schreibt kein Paket. Er öffnet
-eine SQL-Verbindung, prüft mit je einer minimalen Abfrage `sys.dm_os_sys_info`,
+Der Vorabcheck erfasst nichts und schreibt kein Paket. Er öffnet eine
+SQL-Verbindung, prüft mit kleinen Abfragen `sys.dm_os_sys_info`,
 `sys.databases`, `msdb.dbo.backupset` und die gewählte Datenbank, liest die
-Windows-Dienstliste, sucht die Sage-Installation und legt eine Testdatei im
-Zielverzeichnis an. Die Testdatei wird sofort wieder gelöscht.
+Windows-Dienstliste, sucht die Sage-Installation und testet den Zielpfad mit
+einer Datei, die sofort wieder gelöscht wird.
 
 Die Sage-Laufzeitabfrage über die Administrationsbibliotheken bleibt im
 Vorabcheck bewusst aus; geprüft wird nur, ob Application Server und die

@@ -2,10 +2,9 @@
 
 ## Standarddownload
 
-Der reguläre Download ist `ERPDetektiv-win-x64.zip`. Er enthält getrennte
-Ordner `gui/` und `cli/` mit self-contained Windows-x64-Ausgaben einschließlich
-der benötigten .NET-10-Laufzeit. Das Paket wird entpackt und ohne Installer
-gestartet.
+Der normale Download ist `ERPDetektiv-win-x64.zip`. Er enthält getrennte
+Ordner `gui/` und `cli/` sowie die benötigte .NET-10-Laufzeit. Nach dem
+Entpacken lässt sich das Tool ohne Installer starten.
 
 Diese Variante ist der Standard, weil auf Sage-100-Servern eine passende
 .NET-Desktop-Runtime nicht vorausgesetzt werden kann. Der End-to-End-Test auf
@@ -22,17 +21,14 @@ Serverdownload.
 
 ## Signierungsentscheidung
 
-Die Community Edition wird zunächst **ohne öffentlich vertrauenswürdige
-Code-Signatur** veröffentlicht. Der Grund ist wirtschaftlich: Die laufenden
-Kosten und der wiederkehrende Verwaltungsaufwand eines eigenen Zertifikats
-stehen bei der gegenwärtig kleinen, unregelmäßigen Auslieferung in keinem
+Die Community Edition erscheint zunächst **ohne öffentlich vertrauenswürdige
+Code-Signatur**. Für die derzeit kleine und unregelmäßige Auslieferung stehen
+Kosten und Verwaltungsaufwand eines eigenen Zertifikats noch nicht im passenden
 Verhältnis zum Nutzen.
 
-Stattdessen ist jeder Release nachvollziehbar: Er wird aus einem Git-Tag in CI
-gebaut, enthält Lizenz- und Ausführungsdokumentation sowie eine
-`SHA256SUMS.txt`. Administratorinnen und Administratoren prüfen damit die
-Integrität des heruntergeladenen Pakets, bevor sie eine erforderliche lokale
-Freigabe veranlassen.
+Jeder Release bleibt trotzdem nachvollziehbar: CI baut ihn aus einem Git-Tag,
+und das Paket enthält Lizenz, Ausführungsanleitung und `SHA256SUMS.txt`. Damit
+lassen sich Dateien vor einer notwendigen lokalen Freigabe prüfen.
 
 Die Entscheidung wird neu bewertet, wenn mindestens einer dieser Fälle eintritt:
 
@@ -52,10 +48,9 @@ Die Entscheidung wird neu bewertet, wenn mindestens einer dieser Fälle eintritt
 
 ## Prüfsummen
 
-Zu jedem Paket veröffentlicht die CI eine `SHA256SUMS.txt`. Sie ist keine
-Formalität: Ohne nachprüfbare Prüfsumme kann eine Administratorin die
-Sicherheitsausnahme nicht verantworten, die das Werkzeug auf gehärteten
-Systemen braucht.
+Zu jedem Paket veröffentlicht die CI eine `SHA256SUMS.txt`. Sie ermöglicht es,
+die heruntergeladene Datei vor einer Sicherheitsausnahme auf gehärteten
+Systemen zu prüfen.
 
 ## Ausführung auf gehärteten Systemen
 
