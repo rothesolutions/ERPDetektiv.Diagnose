@@ -38,10 +38,8 @@ dotnet build ERPDetektiv.Diagnose.slnx -warnaserror
 dotnet test tests\ERPDetektiv.Tests\ERPDetektiv.Tests.csproj
 ```
 
-Für Tests gegen eine echte SQL-Instanz siehe
-[docs/development-sql-server.md](docs/development-sql-server.md). Ist
-`ERPDETEKTIV_TEST_SQL_CONNECTION` gesetzt, laufen zusätzlich die
-SQL-Integrationstests.
+Ist `ERPDETEKTIV_TEST_SQL_CONNECTION` gesetzt, laufen zusätzlich die
+SQL-Integrationstests gegen diese Instanz.
 
 - Warnungen sind Fehler (`TreatWarningsAsErrors`); bitte keine Unterdrückung
   ohne Begründung im Code.

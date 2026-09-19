@@ -110,9 +110,7 @@ bei gleichen Eingaben dieselben Collector, Vorabprüfungen und Checks.
 
 ## Weitere Dokumentation
 
-- [Entwicklungsfahrplan](docs/development-roadmap.md)
 - [GitHub Pages einrichten](docs/github-pages.md)
 - [Release- und Runtime-Strategie](docs/release-packaging.md)
 - [Wenn Windows die Ausführung blockiert](docs/windows-ausfuehrung-blockiert.md) –
   Diagnose und Freigabe bei ASR, Mark of the Web, AppLocker und Virenschutz
-- [Entwicklungs-SQL-Server](docs/development-sql-server.md)
